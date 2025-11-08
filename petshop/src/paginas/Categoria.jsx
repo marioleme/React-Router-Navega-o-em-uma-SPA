@@ -1,53 +1,40 @@
 import React, { useState, useEffect } from 'react'
-import ListaCategorias from '../components/ListaCategorias'
+import { useParams, Link, useResolvedPath, Outlet } from 'react-router-dom'
 import ListaPost from '../components/ListaPost'
-import '../assets/css/blog.css'
-import { Route, useParams, useRouteMatch, Link, Switch } from 'react-router-dom'
+import ListaCategorias from '../components/ListaCategorias'
 import { busca } from '../api/api'
-import SubCategoria from '../paginas/SubCategoria'
-
+import '../assets/css/blog.css'
+import SubCategoria from './SubCategoria'
 
 const Categoria = () => {
   const { id } = useParams()
-  const { url, path } = useRouteMatch()
-  const [subcategorias, setSubCategorias] = useState([])
+  const [subcategorias, setSubcategorias] = useState([])
+  const resolvedUrl = useResolvedPath("")
 
   useEffect(() => {
     busca(`/categorias/${id}`, (categoria) => {
-      setSubCategorias(categoria.subcategorias)
+      setSubcategorias(categoria.subcategorias)
     })
   }, [id])
+  
   return (
     <>
       <div className="container">
         <h2 className="titulo-pagina">Pet Notícias</h2>
       </div>
-
       <ListaCategorias />
       <ul className="lista-categorias container flex">
-        {
-          subcategorias.map((subcategoria) => (
-            <li
-              className={`lista-categorias__categoria lista-categorias__categoria--${id}`}
-              key={subcategoria}
-            >
-              <Link to={`${url}/${subcategoria}`}>
-                {subcategoria}
-              </Link>
-            </li>
-          ))
-
-        }
+        {subcategorias.map((subcategoria) => (
+          <li className={`lista-categorias__categoria lista-categorias__categoria--${id}`} key={subcategoria}>
+            <Link to={`${resolvedUrl.pathname}/${subcategoria}`}>
+              {subcategoria}
+            </Link>
+          </li>
+        ))}
       </ul>
-      <Switch>
-        <Route exact path={`${path}/`}>
-          <ListaPost url={`/posts?categoria=${id}`} />
-        </Route>
-        <Route path={`${path}/:subcategoria`}>
-          <SubCategoria />
-        </Route>
-      </Switch>
+      <Outlet />
     </>
   )
 }
+
 export default Categoria

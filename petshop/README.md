@@ -1,70 +1,132 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Como Executar o Projeto
 
-In the project directory, you can run:
+Para executar este projeto localmente, você precisará ter o [Node.js](https://nodejs.org/) e o [Yarn](https://yarnpkg.com/) (ou npm) instalados.
 
-### `yarn start`
+### 1. Clone o Repositório
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+git clone https://github.com/seu-usuario/petshop.git
+cd petshop
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### 2. Instale as Dependências
 
-### `yarn test`
+Na pasta raiz do projeto, execute o comando para instalar todas as dependências:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+yarn install
+# ou se preferir usar o npm
+npm install
+```
 
-### `yarn build`
+### 3. Execute a API Local (Banco de Dados)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Este projeto utiliza o `json-server` para simular uma API REST a partir do arquivo `db.json`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Em um terminal, execute o seguinte comando para iniciar o servidor da API. Recomenda-se usar a porta 5000 para evitar conflitos.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npx json-server --watch db.json --port 5000
+```
 
-### `yarn eject`
+Mantenha este terminal em execução para que a aplicação possa consumir os dados.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 4. Execute a Aplicação React
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Em **outro terminal**, na mesma pasta do projeto, inicie a aplicação React:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+yarn start
+# ou
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+A aplicação será aberta automaticamente no seu navegador, geralmente em `http://localhost:3000`.
 
-## Learn More
+## 📁 Estrutura de Pastas
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+O projeto está organizado da seguinte maneira para facilitar a manutenção e escalabilidade:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+petshop/
+├── public/              # Arquivos estáticos e HTML base
+├── src/
+│   ├── assets/          # CSS global, fontes e imagens
+│   ├── components/      # Componentes reutilizáveis (Ex: Cabecalho, ListaPost)
+│   ├── paginas/         # Componentes que representam uma página/rota completa
+│   ├── App.jsx          # Componente principal que define as rotas
+│   └── index.js         # Ponto de entrada da aplicação React
+│
+├── .env                 # Armazena variáveis de ambiente (não versionado)
+├── db.json              # Banco de dados simulado para o json-server
+├── package.json         # Dependências e scripts do projeto
+└── README.md            # Este arquivo
+```
 
-### Code Splitting
+-   **`src/assets`**: Contém todos os arquivos estáticos que são importados pelos componentes, como folhas de estilo CSS e imagens.
+-   **`src/components`**: Armazena componentes React que são reutilizados em várias partes da aplicação, como o cabeçalho (`Cabecalho.jsx`).
+-   **`src/paginas`**: Cada arquivo aqui representa uma página completa da aplicação, que é associada a uma rota no `App.jsx`. Por exemplo, `Home.jsx` e `Sobre.jsx`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## React Router: Navegação em uma SPA (Single Page Application)
 
-### Analyzing the Bundle Size
+Este projeto utiliza o **React Router** para gerenciar a navegação. Em uma SPA como esta, a aplicação carrega uma única página HTML e o conteúdo é atualizado dinamicamente, sem a necessidade de recarregar a página inteira a cada nova interação do usuário.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Por que usar o React Router?
 
-### Making a Progressive Web App
+O React Router é essencial para criar uma experiência de usuário fluida e moderna. Ele permite:
+1.  **Sincronizar a UI com a URL:** Mantém a interface do usuário correspondendo ao endereço na barra do navegador.
+2.  **Navegação sem Recarregamento:** Transições de página instantâneas, pois apenas os componentes necessários são renderizados novamente.
+3.  **URLs Compartilháveis:** Cada "página" da aplicação tem uma URL única que pode ser favoritada ou compartilhada.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Exemplos de Uso no Projeto
 
-### Advanced Configuration
+A configuração das rotas se encontra principalmente no arquivo `src/App.jsx`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+#### 1. Configuração Principal (`BrowserRouter` e `Routes`)
 
-### Deployment
+O `BrowserRouter` é o componente que envolve toda a aplicação, habilitando o roteamento. Dentro dele, o `Routes` gerencia qual `Route` (rota) deve ser renderizada com base na URL atual.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```jsx
+// src/App.jsx
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './paginas/Home';
+import Sobre from './paginas/Sobre';
 
-### `yarn build` fails to minify
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/sobre' element={<Sobre />} />
+      </Routes>
+    </Router>
+  );
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### Rotas Dinâmicas e Aninhadas
+
+Para páginas que dependem de um identificador, como um post de blog ou um produto específico, usamos rotas dinâmicas com parâmetros. O hook `useParams` nos dá acesso a esses parâmetros dentro do componente.
+
+**Definição da Rota:**
+```jsx
+// src/App.jsx
+<Route path="/posts/:id" element={<Post />} />
+<Route path="/produto/:id" element={<Produto />} />
+```
+
+**Uso no Componente:**
+```jsx
+// src/paginas/Post.jsx
+import { useParams } from 'react-router-dom';
+
+const Post = () => {
+  const { id } = useParams(); // Acessa o 'id' da URL
+  // ... busca e exibe os dados do post com o id correspondente
+  return <h1>Exibindo o post: {id}</h1>;
+}
+```
+
+Essa abordagem torna a aplicação mais organizada, escalável e proporciona uma navegação intuitiva, fundamental para a qualidade de qualquer SPA.

@@ -1,17 +1,17 @@
 import React, {useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { busca } from '../api/api'
 import '../assets/css/post.css'
 
 const Post = () => { 
-  let history = useHistory()
+  const navigate = useNavigate()
   const { id } = useParams()
   const[post, setPost] = useState({})
 
   useEffect(() => {
     busca(`/posts/${id}`, setPost)
     .catch(()=>{
-      history.push('/404')
+      navigate('/404')
     })
   }, [id])
 
